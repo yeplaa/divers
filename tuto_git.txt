@@ -1,0 +1,83 @@
+git Clone git@<host>:/srv/git/dnssg.git 
+
+Création de branch local : 
+git checkout -b Users-1.1
+
+Push de branche : 
+git push origin Users-1.1
+
+Récupération de branche depuis serveur : 
+git checkout -b Users-1.1 origin/Users-1.1
+
+git branch master --> changement de branche..
+
+git commit -m "essai" --allow-empty (Commit vide..)
+
+------------------------------
+------------------------------
+
+Création dun projet vide : 
+cd /tmp/
+mkdir <projet>
+cd <projet>
+git init .
+git commit -m "Initialisation du Home" --allow-empty
+git clone --bare <projet> <projet>.git
+cp -R <projet>.git /srv/git/
+chown -R git:apache /srv/git/<projet>.git
+
+cd /srv/git/<projet>.git
+Modification du fichier description/config
+cp hooks/post-update.sample hooks/post-update
+----------------------
+
+Depuis admin : 
+
+git clone git@160.2.0.139:/srv/git/<projet>.git
+cd <projet>
+git push git@160.2.0.139:/srv/git/<projet>.git
+--------------
+
+Si une personne travaille sur le meme repo, il faut rapatrier les mises à jour et fusionner :
+git fetch origin
+git merge origin
+
+--> les deux commandes equivaut normalement à : 
+git pull origin
+
+On peut ensuite mettre a jour le repo distant apres le merge : 
+git push origin
+
+--------
+git checkout -b syslog-ng
+git rm README
+git commit -m "Init Package syslog-ng" --allow-empty
+git push origin syslog-ng
+cp -pR ../../AIL-1.1/syslog-ng_2.1.4/* .
+git add * 
+git commit -am "Update Package syslog-ng"
+git tag -a syslog-ng_v1.0 -m "syslog-ng_v1.0 tag"
+git push origin syslog-ng
+git push --tag origin syslog-ng  
+git archive syslog-ng --prefix='syslog-ng/' | gzip > /home/admin/dest_projets/`git describe syslog-ng`.tar.gz
+
+cp -pR  ../../AIL-1.1/syslog-ng_2.1.4_v1.1/* . 
+git add *
+git commit -am "Update Package syslog-ng"
+git tag -a syslog-ng_v1.1 -m "syslog-ng_v1.1 tag"
+git push origin syslog-ng
+git push --tag origin syslog-ng  
+git archive syslog-ng --prefix='syslog-ng/' | gzip > /home/admin/dest_projets/`git describe syslog-ng`.tar.gz 
+
+----
+
+Pour récupérer l'archive 1.0 et le tag: 
+git checkout syslog-ng_v1.0
+
+git archive syslog-ng_v1.0 --prefix='syslog-ng/' | gzip > /home/admin/dest_projets/syslog-ng_v1.0.tar.gz 
+
+suppresion de branche ou de tag : 
+ git push origin :<branch>/<tag>
+
+git push origin :refs/tags/Outils-1.0  --> Suppression du tag
+
